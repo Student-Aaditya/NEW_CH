@@ -25,7 +25,7 @@
 
   // ---------- Chatbot iframe ----------
   const iframe = document.createElement("iframe")
-  iframe.src = "https://niet-chat-bot.onrender.com"
+  iframe.src = "https://new-ch.onrender.com"
   iframe.title = "NIET Admissions Chatbot"
 
   Object.assign(iframe.style, {
