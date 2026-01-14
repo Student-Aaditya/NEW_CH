@@ -798,7 +798,7 @@ if (data.text || data.link) {
 
 
   return (
-    <div className="h-full flex flex-col bg-white overflow-hidden relative transform-gpu">
+    <div className={`h-full flex flex-col bg-white overflow-hidden relative transform-gpu ${embed ? "bg-transparent" : "bg-white"}`}>
       <div className="chat-mesh-bg" />
 
       <div className="px-5 py-5 bg-gradient-to-br from-[#e2111f] via-[#d00f1c] to-[#9a0b15] flex items-center gap-3 shrink-0 shadow-lg relative z-10 border-b border-white/10 overflow-hidden">

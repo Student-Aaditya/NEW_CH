@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import NIETChatbotMessages from "./NIETChatbotMessages"
 
-export default function NIETChatbot() {
+export default function NIETChatbot({embed=false}) {
   const isIframe = window.self !== window.top
 
   const [open, setOpen] = useState(isIframe)
