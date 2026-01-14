@@ -501,7 +501,7 @@ const getCoursesByLevel = (level) => {
   return []
 }
 
-export default function NIETChatbotMessages() {
+export default function NIETChatbotMessages({embed=false}) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [typing, setTyping] = useState(false)
