@@ -30,7 +30,7 @@ export default function NIETChatbot() {
 
       {/* Chat Window (always open in iframe) */}
       {open && (
-        <div className={`fixed inset-0 z-[90] flex items-end justify-end p-2 sm:p-6`}>
+        <div  className={`fixed inset-0 z-[90] flex items-end justify-end p-2 sm:p-6`}>
           <div className="relative w-full sm:w-[380px] h-full sm:h-[520px] bg-white border border-slate-100 shadow-[0_30px_100px_rgba(0,0,0,0.18)] flex flex-col rounded-[32px] overflow-hidden">
 
             {/* Close button ONLY outside iframe */}
