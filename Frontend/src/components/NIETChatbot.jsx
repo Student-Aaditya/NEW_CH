@@ -43,7 +43,7 @@ export default function NIETChatbot({embed=false}) {
               </button>
             )}
 
-            <NIETChatbotMessages />
+            <NIETChatbotMessages embed={embed} />
           </div>
         </div>
       )}
