@@ -13,65 +13,101 @@ def normalize(text: str) -> str:
     text = re.sub(r'[.\-]', ' ', text)  
     return " ".join(text.split())
 
+def format_full_mtech_course(course: dict) -> str:
+    p = course.get("placements", {})
+    props = course.get("properties", {})
+
+    return f"""
+🎓 *{course.get('course')}*
+
+📘 *Overview*
+{course.get('overview', 'NA')}
+
+📌 *Course Details*
+• Duration: {props.get('duration', 'NA')}
+• Seats: {props.get('seats', 'NA')}
+• Eligibility: {props.get('eligibility', 'NA')}
+• Fees: {props.get('fees', 'Check admission department')}
+
+💼 *Placements*
+• Average Package: {p.get('average', 'NA')}
+• Highest Package: {p.get('highest', 'NA')}
+• Details: {p.get('source_url', 'NA')}
+
+⭐ *Why Choose This Course?*
+- """ + "\n- ".join(course.get("why_choose", []))
+
 
 def mtech_router(query: str):
     q = normalize(query)
 
+    # Accept alternate names for M.Tech
     if not any(word in q for word in [
-    "mtech", "m tech", "m.tech",
-    "master of technology", "master in technology",
-    "integrated mtech", "master of integrated technology",
-    "integrated technology"
-]):
+        "mtech", "m tech", "mtech",
+        "master of technology", "master in technology",
+        "integrated mtech", "master of integrated technology",
+        "integrated technology"
+    ]):
         return None
 
+    best_course = None
+    best_score = -1
 
+    # ---------- MATCH COURSE ----------
     for course in MTECH_DATA:
+        score = 0
+        keywords = [normalize(k) for k in course.get("keywords", [])]
 
-            if any(q == k for k in course["keywords"]):
-                matched = True
-            elif any(k in q for k in course["keywords"]):
-                matched = True
-            else:
-                matched = False
+        for k in keywords:
+            if k == q:
+                score += 100
+            elif k in q:
+                score += 30
 
-            if not matched:
-                continue
+        if score > best_score:
+            best_score = score
+            best_course = course
 
-            if "seat" in q or "seats" in q:
-                return f"Seats:{course['properties'].get('seats', 'Not available')}"
+    if not best_course:
+        return None
 
-            if "duration" in q or "year" in q:
-                return f"Duration:{course['properties'].get('duration', 'Not available')}"
+    c = best_course
 
-            if "eligibility" in q or "criteria" in q:
-                return f"Eligibility: {course['properties'].get('eligibility', 'Not available')}"
+    # ---------- SPECIFIC QUESTIONS ----------
+    if "seat" in q:
+        return f"Seats: {c['properties'].get('seats','Not available')}"
 
-            if "fee" in q or "fees" in q:
-                return f"Fees: {course['properties'].get('fees','Check admission department')}"
+    if "duration" in q or "year" in q:
+        return f"Duration: {c['properties'].get('duration','Not available')}"
 
-            if "placement" in q or "package" in q:
-                p = course.get("placements", {})
-                return f"""
-• Average: {p.get('average','NA')}
-• Highest: {p.get('highest','NA')}
-• Url_Source: {p.get('source_url',"NA")}
-""".strip()
-            
-            if any(w in q for w in ["eligibility","criteria","qualification","required","requirement"]):
-                p = data.get("properties", {})
-                return f"""Eligibility - {data['course']}**
-• {p.get('eligibility','Not available')}"""
-            
-            if any(word in q for word in ["why choose","why this","benefit","advantage","kyu","kyun","kyo"]):
-                why = course.get("why_choose", [])
-                if why:
-                    return "Why Choose this Course :-\n- " + "\n- ".join(why)
-                else:
-                    return "This course offers strong learning, placement, and future career scope."
+    if any(w in q for w in ["eligibility","criteria","qualification","required","requirement"]):
+        return f"Eligibility: {c['properties'].get('eligibility','Not available')}"
 
-            if any(word in q for word in ["overview","about","detail","tell me","kaisa","kya hai"]):
-                return course.get("overview", "No overview available.")
+    if "fee" in q:
+        return f"Fees: {c['properties'].get('fees','Check admission department')}"
+
+    if "placement" in q or "package" in q:
+        p = c.get("placements", {})
+        return f"""Placement Statistics:
+• Average Package: {p.get('average','NA')}
+• Highest Package: {p.get('highest','NA')}
+• Official Source: {p.get('source_url','NA')}
+"""
+
+    if any(word in q for word in ["why","benefit","advantage","kyu","kyun","kyo"]):
+        why = c.get("why_choose", [])
+        return (
+            "Key Reasons to Choose This Course:\n- "
+            + "\n- ".join(why)
+            if why else
+            "This course offers strong learning, placement, and future career scope."
+        )
+
+    if any(word in q for word in ["overview","about","detail","details","tell me","kya hai","kaisa"]):
+        return format_full_mtech_course(c)
+
+    # ---------- DEFAULT: FULL DETAILS ----------
+    return format_full_mtech_course(c)
 
 
 

@@ -21,15 +21,29 @@ CATEGORY_MAP = {
     "duration": ["duration", "years", "kitne saal", "time period", "course time"],
     "why": ["why choose", "benefits", "kyu", "kyo", "scope", "future"]
 }
+def normalize_course_query(q: str):
+    q = q.lower()
+
+    REMOVE_WORDS = [
+        "btech", "b.tech", "mtech", "m.tech",
+        "cse", "cs", "engineering", "branch",
+        "specialization", "spec"
+    ]
+
+    for w in REMOVE_WORDS:
+        q = q.replace(w, " ")
+
+    return " ".join(q.split())
 
 def detect_category(q):
     for key, triggers in CATEGORY_MAP.items():
         if any(t in q for t in triggers):
             return key
-    return None  
+    return None  # fallback
 
+# ------------ FUZZY MATCHING ------------
 def fuzzy_search(query, dataset):
-    q = query.lower()
+    q = normalize_course_query(query)
     all_keywords = [kw for item in dataset for kw in item["keywords"]]
     close = get_close_matches(q, all_keywords, n=1, cutoff=0.5)
     
@@ -41,6 +55,7 @@ def fuzzy_search(query, dataset):
 
     return None
 
+# ------------ MAIN ROUTER ------------
 def course_router(query: str):
     q = query.lower().strip()
     category = detect_category(q)
@@ -65,13 +80,16 @@ def course_router(query: str):
     return " I found nothing. Check spelling or ask like:\n- btech cse seats\n- bca duration\n- why choose aiml"
 
 
+# ------------ TESTS ------------
 if __name__ == "__main__":
     queries = [
         "btech csbs seat",
         "duration of bca",
         "why choose cyber security",
-        "aiml seets",     
+        "aiml seets",     # fuzzy match test
         "cse datta science scope"
     ]
     for q in queries:
+        print("Q:", q)
         print(course_router(q))
+        print("-" * 40)

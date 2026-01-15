@@ -5,12 +5,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 from Ollama.llm_client import ask_ollama_with_context
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # points to RAG/
-DATA_PATH = os.path.join(BASE_DIR, "data", "club_chunks.json")
-
-with open(DATA_PATH, "r", encoding="utf-8") as f:
+# -------------- LOAD CLUB DATA --------------
+with open("RAG/data/club_chunks.json","r",encoding="utf-8") as f:
     CLUB_DATA = json.load(f)
-
 
 
 # -------------- NORMALIZE FUNCTION (Fix misspellings & aliases) --------------
@@ -134,21 +131,35 @@ CULTURAL = [
 
 
 def format_list(title, arr):
-    return f"{title}**\n" + "\n".join("• "+x for x in arr) + \
-           "\n\n🔗 Full list: https://niet.co.in/students-life/student-clubs-societies"
+    return (
+        f"{title}\n"
+        f"Explore exciting opportunities to learn, grow, and connect on campus:\n\n"
+        + "\n".join(f"•{x}" for x in arr)
+        + "\n\n🔗 Explore the complete list of clubs:\n"
+        + "https://niet.co.in/students-life/student-clubs-societies"
+    )
 
+def bulletify_answer(text: str) -> str:
+    if not text:
+        return text
 
-# -------------- MAIN ROUTER FUNCTION --------------
+    lines = [line.strip() for line in text.split("\n") if line.strip()]
+
+    # If already bulleted, return as-is
+    if all(line.startswith(("•", "-", "*")) for line in lines):
+        return text
+
+    return "\n".join(f"• {line}" for line in lines)
+
 def club_router(query: str):
     q = club_normalize(query)
-    # ---------- EXACT CLUB NAME MATCH (HIGHEST PRIORITY) ----------
     for item in CLUB_DATA:
         name = item.get("club_name", "").lower()
         answer = item.get("answer", "")
 
     # Exact or near-exact match
     if q == name or q in name or name in q:
-        return answer
+        return bulletify_answer(answer)
 
     # Very generic query
     if q.strip() == "club" or q.strip() == "clubs":
@@ -161,6 +172,7 @@ def club_router(query: str):
 
     if "club" not in q and "society" not in q:
         return None
+    
     if "music club" in q or q == "music":
         return format_list("Music Clubs", ["Harmonics (Music) Club"])
 
@@ -179,29 +191,25 @@ def club_router(query: str):
     if "cultural" in q or "hobby" in q or "activities" in q:
         return format_list("Cultural & Hobby Clubs", CULTURAL)
 
-
-    # Exact Name Match (fix for Khushiyan Baaton, HID, etc.)
+    
     for item in CLUB_DATA:
         name = item.get("club_name","").lower()
         answer = item.get("answer","")
 
         if any(bad in name for bad in BAD_PATTERNS):
-            continue  # skip garbage entries
+            continue  
 
-        # FINAL CORRECT MATCH LOGIC
         if name == q or name in q or q in name:
-            return answer
+            return bulletify_answer(answer)
 
 
-    #  Keyword Lookup
     for item in CLUB_DATA:
         for kw in item.get("keywords", []):
             words=q.split()
             if kw.lower() in words:
-                return item.get("answer")
+                return bulletify_answer(item.get("answer"))
 
 
-    # Full list fallback
     clean = [
         c["club_name"] for c in CLUB_DATA
         if not any(bad in c["club_name"].lower() for bad in BAD_PATTERNS)
@@ -209,8 +217,6 @@ def club_router(query: str):
     return format_list("Available Clubs at NIET", clean)
 
 
-
-# ---------- Local Test ----------
 if __name__ == "__main__":
     test_queries = [
         # "list of clubs",

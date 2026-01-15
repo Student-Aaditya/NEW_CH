@@ -1,5 +1,28 @@
 [
-    
+     {
+        "id": "admission_a90b58",
+        "category": "admission",
+        "course": "admission",
+        "question": "The college admission  process?",
+        "answer": "Admission Process:- Allotment on the basis of JEE mains/UPCET Counselling conductted by AKTU, Lucknow (85% of total seat) and Direct Admission (15 % of Total Seat). For Registration:-  https://applynow.niet.co.in/",
+        "keywords": [
+           " admission",
+           "process",
+           "admission process"
+        ]
+    },
+     {
+        "id": "admission_a90b58",
+        "category": "admission",
+        "course": "direct",
+        "question": "How does the college direct admission  process?",
+        "answer": "Register yourself and fill the form on following link:- https://applynow.niet.co.in/",
+        "keywords": [
+           "direct admission",
+           "direct",
+           "direct document"
+        ]
+    },
     {
         "id": "admission_a90b58",
         "category": "admission",
@@ -22,7 +45,7 @@
         "category": "admission",
         "course": "First Year  Btech",
         "question": "What is the admission process for First Year  Btech?",
-        "answer": "The candidate must have passed the intermediate examination of U.P. Board 10+2 level examination from any recognized board/university Securing minimum 45% (40% for SC/ST) marks in total of required subject combination",
+        "answer": "The candidate must have passed the intermediate examination of U.P. Board 10+2 level examination from any recognized board/university Securing minimum 45% (40% for SC/ST) marks in total of required subject combination. For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "first year btech"
         ]
@@ -54,7 +77,7 @@
         "category": "admission",
         "course": "First Year  MBA",
         "question": "What is the admission process for First Year  MBA?",
-        "answer": "The candidate must have passed three years of degree course from any recognized University; securing a minimum 45% (40% for SC/ST) marks in aggregate.",
+        "answer": "The candidate must have passed three years of degree course from any recognized University; securing a minimum 45% (40% for SC/ST) marks in aggregate. For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "first year mba"
         ]
@@ -64,7 +87,7 @@
         "category": "admission",
         "course": "Lateral Entry Btech",
         "question": "What is the admission process for Lateral Entry Btech?",
-        "answer": "The candidate must have passed three years of Diploma in Engineering securing a minimum 45% (40% for SC/ST) marks in mathematics.",
+        "answer": "The candidate must have passed three years of Diploma in Engineering securing a minimum 45% (40% for SC/ST) marks in mathematics. For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "lateral entry btech"
         ]
@@ -99,7 +122,7 @@
         "category": "admission",
         "course": "Fifteen percent (15%) of the approved",
         "question": "What is the admission process for Fifteen percent (15%) of the approved?",
-        "answer": "Intake of a course is filled under this category as per the Govt. of U.P. and AKTU guidelines There is usually a great rush for management quota seats. The students need to register themselves early to establish priority.",
+        "answer": "Intake of a course is filled under this category as per the Govt. of U.P. and AKTU guidelines There is usually a great rush for management quota seats. The students need to register themselves early to establish priority.For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "direct",
             "fifteen percent (15%) of the approved"
@@ -110,7 +133,7 @@
         "category": "admission",
         "course": "For admission to B.Tech courses",
         "question": "What is the admission process for For admission to B.Tech courses?",
-        "answer": "The candidate must have passed the intermediate examination or equivalent (10+2) with required subject combination The admission criteria is defined by the college admission policy.",
+        "answer": "The candidate must have passed the intermediate examination or equivalent (10+2) with required subject combination The admission criteria is defined by the college admission policy.For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "for admission to b.tech courses"
         ]
@@ -120,7 +143,7 @@
         "category": "admission",
         "course": "For admission to the first year of MCA (2 years)",
         "question": "What is the admission process for For admission to the first year of MCA (2 years)?",
-        "answer": "A candidate must have passed a bachelor’s degree course of three years minimum duration from any recognized Indian university or its equivalent.  Candidate must have passed Mathematics at 10+2 level graduation level and the admission criteria are defined by the college admission policy.",
+        "answer": "A candidate must have passed a bachelor’s degree course of three years minimum duration from any recognized Indian university or its equivalent.  Candidate must have passed Mathematics at 10+2 level graduation level and the admission criteria are defined by the college admission policy.For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "mca",
             "for admission to the first year of mca (2 years)"
@@ -131,7 +154,7 @@
         "category": "admission",
         "course": "For admission to MBA course",
         "question": "What is the admission process for For admission to MBA course?",
-        "answer": "The minimum qualification required is three years of bachelor’s degree in any discipline the admission criteria are defined by college admission policy.",
+        "answer": "The minimum qualification required is three years of bachelor’s degree in any discipline the admission criteria are defined by college admission policy.For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "mba",
             "for admission to mba course"
@@ -142,7 +165,7 @@
         "category": "admission",
         "course": "For admission to PGDM course",
         "question": "What is the admission process for For admission to PGDM course?",
-        "answer": "Other criteria defined by the AICTE and affiliating University In PGDM Other criteria defined by the AICTE",
+        "answer": "Other criteria defined by the AICTE and affiliating University In PGDM Other criteria defined by the AICTE. For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "pgdm",
             "for admission to pgdm course"
@@ -153,7 +176,7 @@
         "category": "admission",
         "course": "For admission to M.Tech course",
         "question": "What is the admission process for For admission to M.Tech course?",
-        "answer": "The minimum qualification required is a bachelor’s degree in a relevant discipline. MCA is also eligible for the admission to M. Tech (Computer Science & Engineering) The admission criteria are defined by the college admission policy.",
+        "answer": "The minimum qualification required is a bachelor’s degree in a relevant discipline. MCA is also eligible for the admission to M. Tech (Computer Science & Engineering) The admission criteria are defined by the college admission policy. For Registration:-  https://applynow.niet.co.in/",
         "keywords": [
             "mtech",
             "for admission to m.tech course"

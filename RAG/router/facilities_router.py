@@ -31,7 +31,7 @@ def to_bullets(items):
     output = "\n".join(bullets)
 
     if link:
-        output += f"\n\n🔗 Visit Official Link: {link}"
+        output += f"{link}"
 
     return output
 

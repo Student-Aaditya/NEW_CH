@@ -4,80 +4,102 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
+# 🔧 Import Updated RAG + Ollama
+ROOT = Path(__file__).resolve().parents[0]
+sys.path.append(str(ROOT))
 
-from query_rag_2 import answer_rag
-from Ollama.llm_client import ask_ollama_with_context
-from RAG.router.callback_router import router as callback_router
+from RAG.query_rag import answer_from_rag  # NEW
+from Ollama.llm_client import ask_ollama_with_context  # fallback
 
 
 app = FastAPI(
-    title="NIET Chat API",
-    version="3.1 - Greeting Only LLM"
+    title="NIET RAG + Ollama Chat API",
+    version="2.0"
 )
 
-# 🌐 Allow all origins for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "*",  
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
-app.include_router(callback_router, prefix="/api")
-
 class QueryRequest(BaseModel):
     question: str
 
 
+
 @app.get("/")
-def root():
-    return {"status": "Server Running ✔", "version": "3.1"}
+def health():
+    return {"status": "RAG Server Running", "version": "2.0"}
 
-GREETINGS = [
-        "hi", "hello", "hey",
-        "good morning", "good afternoon",
-        "good evening", "namaste"
-    ]
-SMALL_TALK = [
-        "how are you","how r u","how's you","how are u",
-        "what's up","sup","how is your day",
-        "kya haal hai","kaisa ho","kaise ho","sab theek"
-    ]
 
-COURSE_INDICATORS = [
-    "btech","b.tech","mtech","m.tech","mba","mca","bca","bba",
-    "cse","it","aiml","ai ml","ece","civil","mechanical","ds","ece","cy","ai",
-    "syllabus","seats","duration","fees","eligibility","placement",
-    "jee main","admission process","counselling","autonomous","document","wifi",
-    "non veg","washing machine","club","niet"
-]
 
 @app.post("/chat")
 def chat(req: QueryRequest):
     user_query = req.question.strip()
     lowered = user_query.lower()
 
-    if lowered in GREETINGS:
-        return {"source":"llm-greeting","answer": ask_ollama_with_context(lowered)}
-
-    if any(g in lowered for g in SMALL_TALK):
-        return {
-            "source": "llm-smalltalk",
-            "answer": "I'm doing great! 😄 How are you? How can I help you today?"
-        }
-    # 💬 If message has NO course keywords → reply like normal chat
-    if not any(word in lowered for word in COURSE_INDICATORS):
-        return {
-        "source": "chat-mode",
-        "answer": "Thank you! 😄 I'm here to help. Tell me which course or topic you want information about!"
+    
+    GREETINGS = {
+        "hi": "Hi there! 👋 How can I assist you today?",
+        "hello": "Hello! 😊 What would you like to know about NIET?",
+        "hey": "Hey! 👋 I'm here to help with your NIET queries!",
+        "good morning": "Good morning ☀️ How can I help you today?",
+        "good afternoon": "Good afternoon 🌞 What information do you need?",
+        "good evening": "Good evening 🌙 How may I assist you?",
+        "namaste": "Namaste 🙏 How may I help you?",
+        "hola": "Hola! 👋 How can I support you regarding NIET?"
     }
+
+    if lowered in GREETINGS:
+        return {
+            "source": "greeting",
+            "answer": GREETINGS[lowered],
+            "context_used": "pure-greeting"
+        }
+
     for g in GREETINGS:
-        if lowered.startswith(g + " "):
-            return {"source":"llm-greeting-question","answer": ask_ollama_with_context(lowered)}
+        if lowered.startswith(g + " ") or lowered.startswith(g + ","):
+            greeting_text = GREETINGS[g]
+            cleaned_query = lowered.replace(g, "").replace(",", "").strip()
 
-    rag_answer = answer_rag(lowered)
-    if rag_answer:
-        return {"source":"rag","answer": rag_answer}
+            rag_result = answer_from_rag(cleaned_query)
 
-    return {"source":"none","answer":"I don't have data for this. Please re-check your question."}
+            if rag_result and "not found" not in rag_result.lower():
+                return {
+                    "source": "rag+greeting",
+                    "answer": greeting_text + " " + rag_result,
+                    "context_used": "greeting + rag"
+                }
+
+            llm = ask_ollama_with_context(cleaned_query, rag_result or "")
+            return {
+                "source": "ollama+greeting",
+                "answer": greeting_text + " " + llm,
+                "context_used": "greeting + fallback LLM"
+            }
+
+    rag_result = answer_from_rag(lowered)
+    fallback = (
+        rag_result is None
+        or "not found" in rag_result.lower()
+        or "no matching" in rag_result.lower()
+    )
+
+    if fallback:
+        llm = ask_ollama_with_context(lowered, rag_result or "")
+        return {
+            "source": "ollama",
+            "answer": llm,
+            "context_used": rag_result or "no rag context"
+        }
+
+    return {
+        "source": "rag",
+        "answer": rag_result,
+        "context_used": "rag-match"
+    }
